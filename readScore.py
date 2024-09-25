@@ -46,16 +46,19 @@ def deleteRepited(arr):
     eliminar = []
     for i in range(np.size(arr,0)):            
         for n in range(i + 1,np.size(arr,0)):
+            #If black note and a quaver are compared the bottom-left corner is the data we use
             if(arr[i][2]=="b" and arr[n][2]=="q") :
-                a = abs(arr[i][0] - arr[n][0])
-                b = abs(arr[i][1] - arr[n][1] - 23)
-                print(a,b)
-                if((a < 3) and (b < 3)):
+                Wb, Hb = b.shape[::-1]
+                Wq, Hq = q.shape[::-1]
+                z = abs(arr[i][0] - arr[n][0])
+                y = abs((arr[i][1]+Hb) - (arr[n][1] + Hq))
+                # if the difference is less than 3 they are repited notes and we remove the black one
+                if((z < 3) and (y < 3)):
                     eliminar.append(i)
             else:
-                a = abs(arr[i][0] - arr[n][0])
-                b = abs(arr[i][1] - arr[n][1])
-                if((a < 3) and (b < 3)):
+                z = abs(arr[i][0] - arr[n][0])
+                y = abs(arr[i][1] - arr[n][1])
+                if((z < 3) and (y < 3)):
                     eliminar.append(n)
     eliminar = np.unique(eliminar)
     res= np.delete(arr,eliminar,0)
@@ -71,6 +74,7 @@ def deleteRepited(arr):
 
 '''
 def drawNotes(arr, img):
+    #for each note we draw a rectangle of it's size
     for note in arr:
         if note[2] == "b":
             w, h = b.shape[::-1]
@@ -92,6 +96,7 @@ def drawNotes(arr, img):
      
 #Given an image of a score it returns all the notes and the clef
 def extractNotes(src):
+    
     # Read the  image
     img = cv2.imread(src)
     # Take the templates to compare
@@ -130,7 +135,7 @@ def extractNotes(src):
 
     return notas
     
-notas_encontradas = extractNotes('partituras/una-ves-hubo-un-juez.JPG')
+notas_encontradas = extractNotes('partituras/mariaFacil.JPG')
 print(np.size(notas_encontradas,0))
 
 
